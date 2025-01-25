@@ -1,0 +1,31 @@
+---
+# tasks file for prometheus
+
+- name: Create the prometheus directory
+  file:
+    path: /etc/prometheus
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0755
+
+- name: Upload the docker-compose.yml file
+  template:
+    src: templates/docker-compose.yaml.j2
+    dest: /etc/prometheus/docker-compose.yaml
+    owner : "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0755
+
+- name: Upload the prometheus.yaml file
+  template:
+    src: templates/prometheus.yaml.j2
+    dest: /etc/prometheus/prometheus.yaml
+    owner : "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0755
+
+- name: Start prometheus container
+  community.docker.docker_compose_v2:
+    project_src: /etc/prometheus/
+    state: present

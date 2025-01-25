@@ -1,0 +1,6 @@
+---
+# defaults file for prometheus
+prometheus_scrape_interval: 15s
+prometheus_port: 9090
+prometheus_docker_network: false
+prometheus_container_name: prometheus
