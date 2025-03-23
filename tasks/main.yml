@@ -1,31 +1,50 @@
 ---
 # tasks file for prometheus
 
+- name: Create group prometheus
+  group:
+    name: prometheus
+
+- name: Create user prometheus
+  user:
+    name: prometheus
+    group: prometheus
+
+- name: Get prometheus user id
+  command: 'id -u prometheus'
+  register: prometheus_user_id
+  failed_when: prometheus_user_id.rc != 0
+  changed_when: false
+
+- name: Set fact 
+  set_fact:
+    prometheus_user: '{{ prometheus_user_id.stdout }}'
+
 - name: Create the prometheus directory
   file:
-    path: /etc/prometheus
+    path: /opt/prometheus
     state: directory
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    owner: prometheus
+    group: prometheus
     mode: 0755
 
 - name: Upload the docker-compose.yml file
   template:
     src: templates/docker-compose.yaml.j2
-    dest: /etc/prometheus/docker-compose.yaml
-    owner : "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    dest: /opt/prometheus/docker-compose.yaml
+    owner : prometheus
+    group: prometheus
     mode: 0755
 
 - name: Upload the prometheus.yaml file
   template:
     src: templates/prometheus.yaml.j2
-    dest: /etc/prometheus/prometheus.yaml
-    owner : "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    dest: /opt/prometheus/prometheus.yaml
+    owner : prometheus
+    group: prometheus
     mode: 0755
 
 - name: Start prometheus container
   community.docker.docker_compose_v2:
-    project_src: /etc/prometheus/
+    project_src: /opt/prometheus/
     state: present
