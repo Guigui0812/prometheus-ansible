@@ -20,13 +20,16 @@
   set_fact:
     prometheus_user: '{{ prometheus_user_id.stdout }}'
 
-- name: Create the prometheus directory
+- name: Create prometheus directories
   file:
-    path: /opt/prometheus
+    path: "{{} item }}"
     state: directory
     owner: prometheus
     group: prometheus
     mode: 0755
+  loop:
+    - /opt/prometheus
+    - /opt/prometheus/data
 
 - name: Upload the docker-compose.yml file
   template:
