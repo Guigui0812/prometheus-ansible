@@ -22,7 +22,7 @@
 
 - name: Create prometheus directories
   file:
-    path: "{{} item }}"
+    path: "{{ item }}"
     state: directory
     owner: prometheus
     group: prometheus

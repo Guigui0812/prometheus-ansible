@@ -8,6 +8,7 @@ services:
       - ./data:/prometheus
     ports:
       - {{ prometheus_port }}:9090
+    restart: always
     command:
       - "--config.file=/etc/prometheus/prometheus.yaml"
 {% if prometheus_docker_network is true %}
