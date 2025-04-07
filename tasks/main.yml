@@ -50,4 +50,4 @@
 - name: Start prometheus container
   community.docker.docker_compose_v2:
     project_src: /opt/prometheus/
-    state: restarted
+    state: present
